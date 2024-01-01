@@ -1,11 +1,55 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title></title>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
-
-
+<div>
+    <div sec:authorize="isAuthenticated()">
+        <h3><span sec:authentication="name"></span></h3>
+        <h4><a href="/logout">Выйти</a></h4>
+    </div>
+    <table border="1">
+        <thead>
+            <th>User_id</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Role</th>
+            <th>Password</th>
+        </thead>
+        <c th:each="user : ${users}">
+            <tr>
+                <td th:text="${user.getId()}">Id</td>
+                <td><a th:href="@{'/user?id=' + ${user.getId()}}" th:text="${user.getUsername()}">Username</a></td>
+                <td th:text="${user.getAge()}">Age</td>
+                <td>
+                    <select class="form-control" id="dropDownList">
+                        <option th:each="role : ${user.getRoles()}" th:text="${role.getName()}"></option>
+                    </select>
+                </td>
+                <td th:type="password" th:text="${user.getPassword()}">Password</td>
+                <td>
+                    <a th:href="@{'/admin/edit?username=' + ${user.getUsername()} +'&age=' + ${user.getAge()}
+                            + '&admin=' + ${user.getAdmin()} + '&user=' + ${user.getUser()}
+                             + '&password=' + ${user.getPassword()}+ '&id=' + ${user.getId()}}">Edit user</a>
+                </td>
+                <td>
+                    <form th:method="POST" th:action="@{/delete}" th:object="${users}">
+                        <input style="display: none;" readonly type="text" th:name="id" th:value="${user.getId()}" id="id"/>
+                        <input style="padding: 0; border: none; font: inherit; background-color: transparent; color: #0645ad; cursor: pointer; text-decoration: underline;"
+                               type="submit" value="Delete user"/>
+                    </form>
+                </td>
+            </tr>
+        </c>
+    </table>
+    <br/>
+    <hr/>
+    <a href="/admin/new">Create new person</a>
+    <br/>
+    <a href="/">Главная</a>
+</div>
 </body>
 </html>

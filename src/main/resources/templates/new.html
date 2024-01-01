@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>New person</title>
+</head>
+<body>
+
+<div sec:authorize="isAuthenticated()">
+    <h3><span sec:authentication="name"></span></h3>
+    <h4><a href="/logout">Выйти</a></h4>
+</div>
+
+<form th:method="POST" th:action="@{/}" th:object="${users}">
+    <label for="username">Enter username: </label>
+    <input type="text" th:field="*{username}" id="username"/>
+<!--    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</div>-->
+<!--    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{surname}">Error</div>-->
+    <br/>
+    <label for="age">Enter age: </label>
+    <input type="text" th:field="*{age}" id="age"/>
+    <!--    сделать чек бокс-->
+    <br sec:authorize="hasRole('ROLE_ADMIN')"/>
+    <label sec:authorize="hasRole('ROLE_ADMIN')" for="admin">Is Admin: </label>
+    <input sec:authorize="hasRole('ROLE_ADMIN')" type="checkbox" name="admin" th:checked="*{admin}" id="admin"/>
+
+    <!--    сделать чек бокс-->
+    <br sec:authorize="hasRole('ROLE_ADMIN')" />
+    <label sec:authorize="hasRole('ROLE_ADMIN')" for="user">Is User: </label>
+    <input sec:authorize="hasRole('ROLE_ADMIN')" type="checkbox" name="user" th:checked="*{user}" id="user"/>
+
+    <br/>
+    <label for="password">Password: </label>
+    <input type="password" name="" th:field="*{password}" id="password"/>
+
+    <input style="display: none;" readonly th:if="${users.getId()}" type="text" th:field="*{id}" id="id"/>
+<!--    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Error</div>-->
+    <br/>
+    <input th:if="${users.getId() == 0}" type="submit" value="Create!"/>
+    <input th:if="${users.getId()}" type="submit" value="Update!"/>
+</form>
+<hr/>
+<br/>
+<a href="/">Главная</a>
+
+</body>
+</html>

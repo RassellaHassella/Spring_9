@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>Index</title>
 </head>
 <body>
-<h1>Welcome to Index PAGE!</h1>
 
+<div>
+    <h1>Kata Academy</h1>
+</div>
+
+<br/>
+<hr/>
+<h3><span>
+    <a th:href="@{'/user?id=' + ${id}}" sec:authorize="isAuthenticated()" sec:authentication="name" />
+</span></h3>
+<div sec:authorize="!isAuthenticated()">
+    <h4><a href="/login">Войти</a></h4>
+    <h4><a href="/new">Зарегистрироваться</a></h4>
+</div>
+<div sec:authorize="isAuthenticated()">
+    <h4><a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin">Панель администратора</a></h4>
+    <h4><a href="/logout">Выйти</a></h4>
+</div>
 
 </body>
 </html>
