@@ -6,8 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -16,54 +15,45 @@ public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username", unique = true)
-    private String username;
+    @Column(name = "name")
+    private String firstName;
+    @Column(name = "lastname")
+    private String lastName;
     @Column(name = "age")
     private int age;
+
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
     @Column(name = "password")
     private String password;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Role> roles;
 
-//    @Transient
-//    private boolean admin;
-//    @Transient
-//    private boolean user;
-//
-//    public Boolean getAdmin() {
-//        return admin;
-//    }
-//
-//    public void setAdmin(Boolean admin) {
-//        this.admin = admin;
-//    }
-//
-//    public Boolean getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(Boolean user) {
-//        this.user = user;
-//    }
+    @Transient
+    private String rawPassword;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = { @JoinColumn(name = "users_id") },
+            inverseJoinColumns = { @JoinColumn(name = "roles_id") })
+    private Set<Role> roles = new HashSet<>();
 
-    public User() {
-    }
+    public User() {}
 
-    public User(String username, int age, String password) {
-        this.username = username;
+    public User(String email, String firstName, String lastName, Integer age, String password) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.age = age;
         this.password = password;
     }
 
-//    public void checkRole() {
-//        for(Role role : roles) {
-//            if (role.getName().equals("ROLE_ADMIN")) {
-//                admin = true;
-//            } else if (role.getName().equals("ROLE_USER")) {
-//                user = true;
-//            }
-//        }
-//    }
+    public User(String email, String firstName, String lastName, Integer age, String rawPassword, Set<Role> roles) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.rawPassword = rawPassword;
+        this.roles = roles;
+    }
 
     public Long getId() {
         return id;
@@ -73,9 +63,20 @@ public class User implements UserDetails{
         this.id = id;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public int getAge() {
@@ -86,6 +87,13 @@ public class User implements UserDetails{
         this.age = age;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -97,6 +105,18 @@ public class User implements UserDetails{
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public void addRoles(Role role) {
+        this.roles.add(role);
+    }
+
+    public String getRawPassword() {
+        return rawPassword;
+    }
+
+    public void setRawPassword(String rawPassword) {
+        this.rawPassword = rawPassword;
     }
 
     @Override
@@ -111,7 +131,7 @@ public class User implements UserDetails{
 
     @Override
     public String getUsername() {
-        return username;
+        return firstName;
     }
 
     @Override
@@ -141,18 +161,20 @@ public class User implements UserDetails{
 
         User user = (User) o;
 
-        if (id != user.id) return false;
         if (age != user.age) return false;
-        if (!username.equals(user.username)) return false;
-        return password.equals(user.password);
+        if (!Objects.equals(id, user.id)) return false;
+        if (!Objects.equals(firstName, user.firstName)) return false;
+        if (!Objects.equals(lastName, user.lastName)) return false;
+        return Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + age;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        return  result;
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
     }
 }

@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.dao;
 
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import javax.persistence.*;
@@ -14,43 +15,34 @@ public class UserDAOImpl implements UserDAO {
     private EntityManager entityManager;
 
     @Override
-    public List<User> index() {
-        String jpql = "SELECT u FROM User u";
-        TypedQuery<User> query = entityManager.createQuery(jpql, User.class);
-
-        return query.getResultList();
+    public List<User> showAllUsersFromDB() {
+        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
-    public User findByUsername(String username) {
-        String jpql = "SELECT u FROM User u where u.username=:param1";
-        List<User> user = entityManager.createQuery(jpql, User.class)
-                .setParameter("param1", username).getResultList();
-        if (user.isEmpty()) {
-            return null;
-        }
-
-        return user.get(0);
+    @Override
+    public User findByUser(String email) {
+        return entityManager.createQuery("SELECT u FROM User u where u=:email", User.class)
+               .getSingleResult();
     }
 
     @Override
     public User show(Long id) {
         return entityManager.find(User.class, id);
     }
-
+    @Transactional
     @Override
     public void save(User user) {
         entityManager.persist(user);
     }
-
+    @Transactional
     @Override
     public void update(User updatedUser) {
         entityManager.merge(updatedUser);
     }
-
+    @Transactional
     @Override
     public void delete(Long id) {
-        User user = entityManager.find(User.class, id);
-        entityManager.remove(user);
+        entityManager.remove(entityManager.find(User.class, id));
     }
 
 }

@@ -12,16 +12,13 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "name")
-    private String name;
-    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
-    private Set<User> users;
+    @Column(name = "name", unique = true)
+    private String value;
 
     public Role(){}
 
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public Role(String name) {
+        this.value = name;
     }
 
     public Role(Long id) {
@@ -36,20 +33,12 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override
@@ -60,18 +49,18 @@ public class Role implements GrantedAuthority {
         Role role = (Role) o;
 
         if (!id.equals(role.id)) return false;
-        return name.equals(role.name);
+        return value.equals(role.value);
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + name.hashCode();
+        result = 31 * result + value.hashCode();
         return result;
     }
 
     @Override
     public String getAuthority() {
-        return getName();
+        return getValue();
     }
 }
