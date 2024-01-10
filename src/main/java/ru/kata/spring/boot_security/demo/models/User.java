@@ -15,36 +15,36 @@ import java.util.Set;
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "username")
+    private Long id;
+    @Column(name = "username", unique = true)
     private String username;
     @Column(name = "age")
     private int age;
     @Column(name = "password")
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
-    @Transient
-    private boolean admin;
-    @Transient
-    private boolean user;
-
-    public Boolean getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
-    }
-
-    public Boolean getUser() {
-        return user;
-    }
-
-    public void setUser(Boolean user) {
-        this.user = user;
-    }
+//    @Transient
+//    private boolean admin;
+//    @Transient
+//    private boolean user;
+//
+//    public Boolean getAdmin() {
+//        return admin;
+//    }
+//
+//    public void setAdmin(Boolean admin) {
+//        this.admin = admin;
+//    }
+//
+//    public Boolean getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(Boolean user) {
+//        this.user = user;
+//    }
 
     public User() {
     }
@@ -55,21 +55,21 @@ public class User implements UserDetails{
         this.password = password;
     }
 
-    public void checkRole() {
-        for(Role role : roles) {
-            if (role.getName().equals("ROLE_ADMIN")) {
-                admin = true;
-            } else if (role.getName().equals("ROLE_USER")) {
-                user = true;
-            }
-        }
-    }
+//    public void checkRole() {
+//        for(Role role : roles) {
+//            if (role.getName().equals("ROLE_ADMIN")) {
+//                admin = true;
+//            } else if (role.getName().equals("ROLE_USER")) {
+//                user = true;
+//            }
+//        }
+//    }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -149,10 +149,10 @@ public class User implements UserDetails{
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + username.hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + age;
-        result = 31 * result + password.hashCode();
-        return result;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        return  result;
     }
 }

@@ -27,19 +27,19 @@ public class UserController {
     public String showFirstPage(Principal principal, ModelMap model) {
         userService.save(new User("admin", 26, "admin"));
         if (principal != null) {
-            int id = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            Long id = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
             model.addAttribute("user", id);
         }
         return "/index";
     }
     @GetMapping("/user")
-    public String showUser(@RequestParam(value = "id", required = false) Integer id, ModelMap model) {
+    public String showUser(@RequestParam(value = "id", required = false) Long id, ModelMap model) {
         model.addAttribute("users", userService.show(id));
         return "id";
     }
 
     @GetMapping("/admin")
-    public String showAdmin(@RequestParam(value = "id", required = false) Integer id, ModelMap model) {
+    public String showAdmin(@RequestParam(value = "id", required = false) Long id, ModelMap model) {
         if (id != null) {
             model.addAttribute("users", userService.show(id));
             return "id";

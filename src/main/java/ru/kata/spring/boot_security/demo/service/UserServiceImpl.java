@@ -32,16 +32,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<User> index() {
         List<User> users = userDAO.index();
-        for (User user : users) {
-            user.checkRole();
-        }
+//        for (User user : users) {
+//            user.checkRole();
+//        }
         return users;
     }
     @Transactional(readOnly = true)
     @Override
-    public User show(int id) {
+    public User show(Long id) {
         User user = userDAO.show(id);
-        user.checkRole();
+//        user.checkRole();
         return user;
     }
     @Transactional
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService{
     }
     @Transactional
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         userDAO.delete(id);
     }
 

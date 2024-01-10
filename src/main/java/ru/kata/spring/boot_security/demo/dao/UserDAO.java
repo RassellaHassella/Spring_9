@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface UserDAO {
     public List<User> index();
-    public User show(int id);
+    public User show(Long id);
     public void save(User user);
     public void update(User updatedUser);
-    public void delete(int id);
+    public void delete(Long id);
     public User findByUsername(String username);
 }
