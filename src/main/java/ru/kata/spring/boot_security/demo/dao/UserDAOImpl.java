@@ -1,12 +1,17 @@
 package ru.kata.spring.boot_security.demo.dao;
 
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -29,20 +34,23 @@ public class UserDAOImpl implements UserDAO {
     public User show(Long id) {
         return entityManager.find(User.class, id);
     }
-    @Transactional
+
     @Override
     public void save(User user) {
         entityManager.persist(user);
     }
-    @Transactional
+
     @Override
     public void update(User updatedUser) {
         entityManager.merge(updatedUser);
     }
-    @Transactional
+
     @Override
     public void delete(Long id) {
         entityManager.remove(entityManager.find(User.class, id));
+    }
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getValue())).collect(Collectors.toList());
     }
 
 }

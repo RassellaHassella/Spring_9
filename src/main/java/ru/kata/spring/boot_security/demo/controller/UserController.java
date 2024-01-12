@@ -1,24 +1,30 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.dao.RoleDAO;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.security.Principal;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
-    private final RoleDAO roleDAO;
-
-    public UserController(RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
+    private final UserService userService;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
-    @GetMapping("/user")
-    public String showUser(Model model, @AuthenticationPrincipal User user){
-        model.addAttribute("user", user);
-        model.addAttribute("allRoles", roleDAO.showAllRolesFromDB());
+    @GetMapping()
+    public String showUser(Principal principal, Model model){
+        model.addAttribute("user", userService.loadUserByUsername(principal.getName()));
+//        model.addAttribute("allRoles", roleDAO.showAllRolesFromDB());
         return "user";
     }
 }

@@ -31,61 +31,43 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> showAllUsersFromDB() {
-        List<User> users = userDAO.showAllUsersFromDB();
-        return users;
+        return userDAO.showAllUsersFromDB();
     }
 
     @Override
     public User show(Long id) {
-        User user = userDAO.show(id);
-        return user;
+        return userDAO.show(id);
     }
-
+    @Transactional
     @Override
     public boolean save(User user) {
         User users = userDAO.findByUser(user.getEmail());
         if (users == null) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userDAO.save(user);
-        } else  {
+        } else {
             throw new RuntimeException("Пользователь с таким email уже существует!");
         }
         return true;
 
     }
-
-    //    @Override
-//    public void checkSetRoles(User user, List<Role> roles) {
-//        if (user.getRoles() == null) {
-//            user.setRoles(new HashSet<>());
-//        } else {
-//            user.getRoles().clear();
-//        }
-//
-//        if (user.getAdmin()){
-//            user.getRoles().add(roles.get(0));
-//        }
-//        if (user.getUser()) {
-//            user.getRoles().add(roles.get(1));
-//        }
-//    }
+    @Transactional
     @Override
     public void update(User updatedUser) {
-        checkSetRoles(updatedUser, roleService.findAll());
         if (updatedUser.getPassword().isEmpty()) {
             updatedUser.setPassword(userDAO.show(updatedUser.getId()).getPassword());
         } else {
             updatedUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
         }
-
         userDAO.update(updatedUser);
     }
-
+    @Transactional
     @Override
     public void delete(Long id) {
         userDAO.delete(id);
     }
 
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userDAO.findByUser(email);
@@ -96,13 +78,5 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @Override
-    public BCryptPasswordEncoder getbCryptPasswordEncoder() {
-        return bCryptPasswordEncoder;
-    }
 
-    @Override
-    public void setbCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 public interface RoleDAO {
     public List<Role> showAllRolesFromDB();
     public void save(Role role);
-    public Role findByRole(String value);
+    public List<Role> findByRole(String value);
 }
