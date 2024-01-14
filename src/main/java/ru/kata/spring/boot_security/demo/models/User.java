@@ -30,11 +30,11 @@ public class User implements UserDetails{
 
     @Transient
     private String rawPassword;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = { @JoinColumn(name = "users_id") },
             inverseJoinColumns = { @JoinColumn(name = "roles_id") })
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User() {}
 
@@ -46,7 +46,7 @@ public class User implements UserDetails{
         this.password = password;
     }
 
-    public User(String email, String firstName, String lastName, Integer age, String rawPassword, List<Role> roles) {
+    public User(String email, String firstName, String lastName, Integer age, String rawPassword, Set<Role> roles) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -99,11 +99,11 @@ public class User implements UserDetails{
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

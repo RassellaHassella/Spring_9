@@ -15,6 +15,7 @@ public class InitDB {
     private final RoleDAO roleDAO;
     private final UserService userService;
 
+
     public InitDB(RoleDAO roleDAO, UserService userService) {
         this.roleDAO = roleDAO;
         this.userService = userService;

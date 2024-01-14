@@ -26,8 +26,15 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findByUser(String email) {
-        return entityManager.createQuery("SELECT u FROM User u where u=:email", User.class)
-               .getSingleResult();
+        try {
+            User user = entityManager.createQuery("SELECT u FROM User u where u.email=:email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return user;
+        } catch (NoResultException e) {
+            return null;
+        }
+
     }
 
     @Override
@@ -49,6 +56,7 @@ public class UserDAOImpl implements UserDAO {
     public void delete(Long id) {
         entityManager.remove(entityManager.find(User.class, id));
     }
+
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getValue())).collect(Collectors.toList());
     }
