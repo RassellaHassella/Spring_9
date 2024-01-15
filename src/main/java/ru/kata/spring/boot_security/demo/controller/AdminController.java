@@ -36,20 +36,20 @@ public class AdminController {
     }
 
 
-    @PostMapping({"/createPerson"})
+    @PostMapping({"new"})
     public String createPerson(@ModelAttribute("user") User user,
                                @RequestParam(value = "nameRoles", required = false) String roles) {
         user.setRoles(roleService.findByRole(roles));
         userService.save(user);
         return "redirect:/admin";
     }
-    @GetMapping("/createPerson")
-    public String newUserForm(Model model) {
-        model.addAttribute(new User());
-        List<Role> roles = roleService.showAllRolesFromDB();
-        model.addAttribute("allRoles", roles);
-        return "new";
-    }
+//    @GetMapping("/new")
+//    public String newUserForm(Model model) {
+//        model.addAttribute(new User());
+//        List<Role> roles = roleService.showAllRolesFromDB();
+//        model.addAttribute("allRoles", roles);
+//        return "new";
+//    }
 
     @PostMapping("/update/{id}")
     public String updatePerson(@ModelAttribute("users") User user,

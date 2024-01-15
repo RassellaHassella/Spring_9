@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails{
+public class    User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +32,7 @@ public class User implements UserDetails{
     @JoinTable(name="user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     public User() {}
 
@@ -104,9 +104,9 @@ public class User implements UserDetails{
         this.roles = roles;
     }
 
-//    public void addRoles(Role role) {
-//        this.roles.add(role);
-//    }
+    public void addRoles(Role role) {
+        this.roles.add(role);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
