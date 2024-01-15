@@ -24,7 +24,6 @@ public class UserController {
     @GetMapping()
     public String showUser(Principal principal, Model model){
         model.addAttribute("user", userService.loadUserByUsername(principal.getName()));
-//        model.addAttribute("allRoles", roleDAO.showAllRolesFromDB());
-        return "user";
+        return "/id";
     }
 }

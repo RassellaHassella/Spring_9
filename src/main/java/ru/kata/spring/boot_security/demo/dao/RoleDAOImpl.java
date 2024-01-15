@@ -18,9 +18,9 @@ public class RoleDAOImpl implements RoleDAO {
 
     @Transactional
     @Override
-    public Set<Role> showAllRolesFromDB() {
+    public List<Role> showAllRolesFromDB() {
         return entityManager.createQuery("SELECT r FROM Role r", Role.class)
-                .getResultStream().collect(Collectors.toSet());
+                .getResultStream().collect(Collectors.toList());
     }
 
     @Transactional
@@ -31,10 +31,10 @@ public class RoleDAOImpl implements RoleDAO {
 
     @Transactional
     @Override
-    public Set<Role> findByRole(String value) {
-        TypedQuery<Role> query = entityManager.createQuery("SELECT r FROM Role r where r=:value1", Role.class);
-        query.setParameter("value1", value);
-        return query.getResultStream().collect(Collectors.toSet());
+    public List<Role> findByRole(String value) {
+        return entityManager.createQuery("SELECT r FROM Role r where r=:value1", Role.class)
+        .setParameter("value1", value)
+        .getResultStream().collect(Collectors.toList());
 
     }
 

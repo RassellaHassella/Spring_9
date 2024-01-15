@@ -2,17 +2,18 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -35,19 +36,26 @@ public class AdminController {
     }
 
 
-    @PostMapping({"/new"})
+    @PostMapping({"/createPerson"})
     public String createPerson(@ModelAttribute("user") User user,
                                @RequestParam(value = "nameRoles", required = false) String roles) {
         user.setRoles(roleService.findByRole(roles));
         userService.save(user);
         return "redirect:/admin";
     }
+    @GetMapping("/createPerson")
+    public String newUserForm(Model model) {
+        model.addAttribute(new User());
+        List<Role> roles = roleService.showAllRolesFromDB();
+        model.addAttribute("allRoles", roles);
+        return "new";
+    }
 
     @PostMapping("/update/{id}")
     public String updatePerson(@ModelAttribute("users") User user,
             @RequestParam(value = "roleName", required = false) String roles){
         user.setRoles(roleService.findByRole(roles));
-        userService.update(user);
+        userService.update(user, roleService.findByRole(roles));
         return "redirect:/admin";
     }
 

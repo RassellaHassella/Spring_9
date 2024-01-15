@@ -28,13 +28,11 @@ public class User implements UserDetails{
     @Column(name = "password")
     private String password;
 
-    @Transient
-    private String rawPassword;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles",
-            joinColumns = { @JoinColumn(name = "users_id") },
-            inverseJoinColumns = { @JoinColumn(name = "roles_id") })
-    private Set<Role> roles = new HashSet<>();
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
 
     public User() {}
 
@@ -46,12 +44,11 @@ public class User implements UserDetails{
         this.password = password;
     }
 
-    public User(String email, String firstName, String lastName, Integer age, String rawPassword, Set<Role> roles) {
+    public User(String email, String firstName, String lastName, Integer age, List<Role> roles) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        this.rawPassword = rawPassword;
         this.roles = roles;
     }
 
@@ -99,25 +96,17 @@ public class User implements UserDetails{
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
-    public void addRoles(Role role) {
-        this.roles.add(role);
-    }
-
-    public String getRawPassword() {
-        return rawPassword;
-    }
-
-    public void setRawPassword(String rawPassword) {
-        this.rawPassword = rawPassword;
-    }
+//    public void addRoles(Role role) {
+//        this.roles.add(role);
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

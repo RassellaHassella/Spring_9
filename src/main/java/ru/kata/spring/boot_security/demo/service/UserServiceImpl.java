@@ -1,6 +1,9 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,21 +14,19 @@ import ru.kata.spring.boot_security.demo.dao.UserDAO;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserDAO userDAO;
-    private RoleDAO roleDAO;
+    private final UserDAO userDAO;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO, RoleDAO roleDAO, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserDAO userDAO, @Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDAO = userDAO;
-        this.roleDAO = roleDAO;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -52,14 +53,14 @@ public class UserServiceImpl implements UserService {
 
     }
     @Transactional
-    @Override
-    public void update(User updatedUser) {
-        if (updatedUser.getPassword().isEmpty()) {
-            updatedUser.setPassword(userDAO.show(updatedUser.getId()).getPassword());
+    public void update(User user, List<Role> roles) {
+        if (user.getPassword().isEmpty()) {
+            user.setPassword(userDAO.show(user.getId()).getPassword());
         } else {
-            updatedUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
-        userDAO.update(updatedUser);
+        user.setRoles(roles);
+        userDAO.update(user);
     }
     @Transactional
     @Override
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
         userDAO.delete(id);
     }
 
-    @Transactional
+    @Transactional (readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userDAO.findByUser(email);
@@ -75,7 +76,11 @@ public class UserServiceImpl implements UserService {
         if (user == null)
             throw new UsernameNotFoundException("User not found!");
 
-        return user;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                mapRolesToAuthorities(user.getRoles()));
+    }
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
     }
 
 
