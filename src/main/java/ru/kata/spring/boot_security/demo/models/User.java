@@ -6,6 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 
@@ -16,22 +19,30 @@ public class    User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
+    @NotEmpty(message = "Name shouldn't be empty")
+    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 charscters")
     private String firstName;
     @Column(name = "lastname")
+    @NotEmpty(message = "Name shouldn't be empty")
+    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 charscters")
     private String lastName;
     @Column(name = "age")
     private int age;
 
     @Column(name = "email", unique = true, nullable = false)
+    @NotEmpty(message = "Email shouldn't be empty")
+    @Email(message = "Email should be valid")
     private String email;
 
     @Column(name = "password")
+    @NotEmpty(message = "Password shouldn't be empty")
+//    @Size(min = 2, max = 30, message = "Password should be between 2 and 30 charscters")
     private String password;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.LAZY)
-    @JoinTable(name="user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
 
     public User() {}

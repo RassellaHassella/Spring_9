@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.dao;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Role;
@@ -26,16 +27,16 @@ public class RoleDAOImpl implements RoleDAO {
     @Transactional
     @Override
     public void save(Role role) {
+
         entityManager.persist(role);
     }
 
     @Transactional
     @Override
-    public List<Role> findByRole(String value) {
-        return entityManager.createQuery("SELECT r FROM Role r where r=:value1", Role.class)
-        .setParameter("value1", value)
-        .getResultStream().collect(Collectors.toList());
-
+    public List<Role> findByRole(List<Role> roles) {
+        return entityManager.createQuery("SELECT r FROM Role r where r IN :roles", Role.class)
+        .setParameter("roles", roles)
+        .getResultList();
     }
 
 }

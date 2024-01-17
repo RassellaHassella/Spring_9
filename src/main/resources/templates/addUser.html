@@ -8,26 +8,37 @@
 </head>
 <body>
 <form th:action="@{/admin/add}" method="post">
-    <p><label for="name">name</label></p>
-    <p><input type="text" id="name" name="name" required></p>
+    <p><label for="firstName">firstName</label></p>
+    <p><input type="text" id="firstName" name="firstName" th:field="*{user.firstName}" required>></p>
+<!--    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{user.firstName}">firstName error</div>-->
+    <br/>
+
     <p><label for="password">password</label></p>
-    <p><input type="password" id="password" name="password"></p>
-    <p><label for="lastname">lastname</label></p>
-    <p><input type="text" id="lastname" name="lastname"></p>
+    <p> <input type="password" id="password" name="password" th:field="*{user.password}" required></p>
+<!--    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{user.password}">Password error</div>-->
+    <br/>
+
+    <p><label for="lastName">lastname</label></p>
+    <p><input type="text" id="lastName" name="lastName" th:field="*{user.lastName}" required></p>
+<!--    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{user.lastName}">lastName error</div>-->
+    <br/>
+
     <p><label for="age">age</label></p>
-    <p><input type="number" id="age" name="age"></p>
+    <p><input type="number" id="age" name="age" th:field="*{user.age}" required></p>
+<!--    <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{user.age}">age error</div>-->
+    <br/>
+
     <p><label for="email">email</label></p>
-    <p><input type="text" id="email" name="email"></p>
-    <!--    сделать чек бокс-->
-    <br sec:authorize="hasRole('ROLE_ADMIN')"/>
-    <label sec:authorize="hasRole('ROLE_ADMIN')" for="admin">Is Admin: </label>
-    <input sec:authorize="hasRole('ROLE_ADMIN')" type="checkbox" name="admin" th:checked="*{admin}" id="admin"/>
+    <p><input type="text" id="email" name="email" th:field="*{user.email}" required></p>
+<!--    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{user.email}">Email error</div>-->
+    <br/>
 
-    <!--    сделать чек бокс-->
-    <br sec:authorize="hasRole('ROLE_ADMIN')" />
-    <label sec:authorize="hasRole('ROLE_ADMIN')" for="user">Is User: </label>
-    <input sec:authorize="hasRole('ROLE_ADMIN')" type="checkbox" name="user" th:checked="*{user}" id="user"/>
-
+  <label>Role:
+      <select size="2" multiple name="allRoles">
+          <option selected="selected" value="1">USER</option>
+          <option value="2">ADMIN</option>
+      </select>
+  </label>
     <br/>
     <p>
         <input type="submit" value="add">
