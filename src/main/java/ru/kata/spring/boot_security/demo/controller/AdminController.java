@@ -50,7 +50,7 @@ public class AdminController {
         return "addUser";
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/edit")
     public String updatePerson(@ModelAttribute("users") User user,
             @RequestParam(value = "roleName", required = false) String roles){
         user.setRoles(roleService.findByRole(roles));

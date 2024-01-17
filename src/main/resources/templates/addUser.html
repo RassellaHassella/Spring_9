@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,6 +18,17 @@
     <p><input type="number" id="age" name="age"></p>
     <p><label for="email">email</label></p>
     <p><input type="text" id="email" name="email"></p>
+    <!--    сделать чек бокс-->
+    <br sec:authorize="hasRole('ROLE_ADMIN')"/>
+    <label sec:authorize="hasRole('ROLE_ADMIN')" for="admin">Is Admin: </label>
+    <input sec:authorize="hasRole('ROLE_ADMIN')" type="checkbox" name="admin" th:checked="*{admin}" id="admin"/>
+
+    <!--    сделать чек бокс-->
+    <br sec:authorize="hasRole('ROLE_ADMIN')" />
+    <label sec:authorize="hasRole('ROLE_ADMIN')" for="user">Is User: </label>
+    <input sec:authorize="hasRole('ROLE_ADMIN')" type="checkbox" name="user" th:checked="*{user}" id="user"/>
+
+    <br/>
     <p>
         <input type="submit" value="add">
     </p>
