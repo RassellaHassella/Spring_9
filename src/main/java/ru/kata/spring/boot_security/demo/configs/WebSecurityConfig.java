@@ -42,7 +42,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //Настройка входа в систему
                 .formLogin()
-                .loginPage("/login")
+                .loginPage("/login").loginProcessingUrl("/process_login")
+                .usernameParameter("email")
+                .passwordParameter("password")
                 .successHandler(successUserHandler)
                 .permitAll()
                 .and()

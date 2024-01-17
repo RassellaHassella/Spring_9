@@ -1,17 +1,13 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.models.Role;
+import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -26,30 +22,33 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping({"/", "/index"})
-    public String showFirstPage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal) {
-        String email = userDetails.getUsername();
-        model.addAttribute("users", userService.showAllUsersFromDB());
-        model.addAttribute("user", userService.loadUserByUsername(email));
-        model.addAttribute("roles", roleService.showAllRolesFromDB());
-        return "/index";
+    @GetMapping()
+    public ModelAndView showFirstPage() {
+        List<User> users = userService.showAllUsersFromDB();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin");
+        modelAndView.addObject("users", users);
+
+//        String email = userDetails.getUsername();
+//        model.addAttribute("users", userService.showAllUsersFromDB());
+//        model.addAttribute("user", userService.loadUserByUsername(email));
+//        model.addAttribute("roles", roleService.showAllRolesFromDB());
+//        return "/id";
+        return modelAndView;
     }
 
 
-    @PostMapping({"new"})
+    @PostMapping({"/add"})
     public String createPerson(@ModelAttribute("user") User user,
                                @RequestParam(value = "nameRoles", required = false) String roles) {
         user.setRoles(roleService.findByRole(roles));
         userService.save(user);
         return "redirect:/admin";
     }
-//    @GetMapping("/new")
-//    public String newUserForm(Model model) {
-//        model.addAttribute(new User());
-//        List<Role> roles = roleService.showAllRolesFromDB();
-//        model.addAttribute("allRoles", roles);
-//        return "new";
-//    }
+    @GetMapping("/add")
+    public String newUserForm() {
+        return "addUser";
+    }
 
     @PostMapping("/update/{id}")
     public String updatePerson(@ModelAttribute("users") User user,

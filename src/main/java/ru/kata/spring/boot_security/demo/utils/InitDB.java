@@ -32,6 +32,9 @@ public class InitDB {
         user.addRoles(roleAdmin);
         user.addRoles(roleUser);
         userService.save(user);
+        User user1 = new User("mail@mail.ru", "Ivan", "Ivanov", 22, "1234");
+        user1.addRoles(roleUser);
+        userService.save(user1);
 
     }
 }

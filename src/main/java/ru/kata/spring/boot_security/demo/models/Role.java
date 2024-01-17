@@ -16,8 +16,8 @@ public class Role implements GrantedAuthority {
     @Column(name = "name", unique = true)
     private String role;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+//    @ManyToMany(mappedBy = "roles")
+//    private List<User> users;
 
     public String getNoPrefix(){
         String pr = "ROLE_";

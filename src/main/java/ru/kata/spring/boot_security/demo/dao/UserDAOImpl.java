@@ -2,12 +2,12 @@ package ru.kata.spring.boot_security.demo.dao;
 
 
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import javax.persistence.*;
 
 import java.util.List;
-
 
 
 @Repository
@@ -34,7 +34,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void save(User user) {
-        entityManager.persist(user);
+        entityManager.merge(user);
     }
 
     @Override
