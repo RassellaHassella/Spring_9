@@ -20,12 +20,10 @@
         <th>lastname</th>
         <th>roles</th>
     </tr>
-    <tr th:each="user : ${users}">
+    <tr th:each="user : ${usersList}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.email}"></td>
         <td th:text="${user.firstName}"></td>
-<!--        <td th:password="${user.password}"></td>-->
-<!--        <td th:text="${user.firstName}"></td>-->
         <td th:text="${user.age}"></td>
         <td th:text="${user.lastName}"></td>
         <td th:text="${user.roles}"></td>
@@ -42,7 +40,7 @@
     </tbody>
 </table>
 <h2>Add user</h2>
-<a th:href="@{'/admin/add'}">Add new user</a>
+<a th:href="@{'/admin/addUser'}">Add new user</a>
 <p>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="logout"/>

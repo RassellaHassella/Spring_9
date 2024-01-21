@@ -1,31 +1,42 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.RoleDAO;
-import ru.kata.spring.boot_security.demo.dao.UserDAO;
 import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService{
-    private final RoleDAO roleDAO;
-    private final UserDAO userDAO;
-
-    public RoleServiceImpl(RoleDAO roleDAO, UserDAO userDAO) {
-        this.roleDAO = roleDAO;
-        this.userDAO = userDAO;
+    private final RoleRepository roleRepository;
+    @Autowired
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
-    public List<Role> showAllRolesFromDB() {
-        return roleDAO.showAllRolesFromDB();
+    public Role save(Role role){
+       return roleRepository.save(role);
     }
 
     @Override
-    public List<Role> findByRole(List<Role> roles) {
-        return roleDAO.findByRole(roles);
+    public List<Role> findAll(){
+        return roleRepository.findAll();
+    }
+    @Override
+    public Optional<Role> findById(Long id){
+        return roleRepository.findById(id);
+    }
+
+    @Override
+    public void delete(Long id){
+         roleRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Role> findByRole(String role){
+        return roleRepository.findByRole(role);
     }
 }

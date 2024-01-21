@@ -1,40 +1,38 @@
 package ru.kata.spring.boot_security.demo.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.dao.RoleDAO;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 
 import javax.annotation.PostConstruct;
+import java.util.Set;
 
 @Component
 public class InitDB {
 
-    private final RoleDAO roleDAO;
     private final UserService userService;
+    private final RoleRepository roleRepository;
 
-
-    public InitDB(RoleDAO roleDAO, UserService userService) {
-        this.roleDAO = roleDAO;
+    @Autowired
+    public InitDB(UserService userService, RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
         this.userService = userService;
     }
+
     @PostConstruct
-    private void PostDb(){
-        Role roleAdmin = new Role( "ROLE_ADMIN");
-        Role roleUser = new Role("ROLE_USER");
-
-        roleDAO.save(roleAdmin);
-        roleDAO.save(roleUser);
-
-        User user = new User("rkr.ru@mail.ru", "Ruslan", "Kutepov", 29, "1234");
-        user.addRoles(roleAdmin);
-        user.addRoles(roleUser);
-        userService.save(user);
-        User user1 = new User("mail@mail.ru", "Ivan", "Ivanov", 22, "1234");
-        user1.addRoles(roleUser);
-        userService.save(user1);
-
+    private void PostDb() {
+        userService.createRolesIfNotExist();
+        User user = new User("Ruslan", "Kutepov", 29, "rkr.ru@mail.ru", "1234",
+                Set.of(roleRepository.getById(1L), roleRepository.getById(2L)));
+        userService.add(user);
+        User user1 = new User("Ivan", "Ivanov", 22, "mail@mail.ru", "1234",
+                Set.of(roleRepository.getById(1L)));
+        userService.add(user1);
     }
 }

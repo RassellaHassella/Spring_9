@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.models.Role;
@@ -11,7 +12,9 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,45 +29,54 @@ public class AdminController {
     }
 
     @GetMapping()
-    public ModelAndView showFirstPage() {
-        List<User> users = userService.showAllUsersFromDB();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin");
-        modelAndView.addObject("users", users);
-
-//        String email = userDetails.getUsername();
-//        model.addAttribute("users", userService.showAllUsersFromDB());
-//        model.addAttribute("user", userService.loadUserByUsername(email));
-//        model.addAttribute("roles", roleService.showAllRolesFromDB());
-//        return "/id";
-        return modelAndView;
+    public String showFirstPage(Model model) {
+        List<User> users = userService.usersList();
+        model.addAttribute("usersList", users);
+        return "admin";
     }
 
 
     @PostMapping({"/add"})
-    public String createPerson(@ModelAttribute("user") User user,
-                               @RequestParam(value = "allRoles", required = false) List<Role> roles) {
-        user.setRoles(roleService.findByRole(roles));
-        userService.save(user);
+    public String createPerson(@ModelAttribute("user") User user){
+//                               @RequestParam(value = "allRoles", required = false) Set<Role> roles) {
+//        user.setRoles(roleService.findByRole(roles));
+        userService.add(user);
         return "redirect:/admin";
     }
     @GetMapping("/add")
     public String newUserForm(@ModelAttribute("user") User user, Model model) {
-        List<Role> roles = (List<Role>) roleService.showAllRolesFromDB();
+        Set<Role> roles = (Set<Role>) roleService.findAll();
         model.addAttribute("allRoles", roles);
 
 
         return "addUser";
     }
 
-//    @PostMapping("/edit")
-//    public String updatePerson(@ModelAttribute("users") User user,
-//            @RequestParam(value = "roleName", required = false) String roles){
-//        user.setRoles(roleService.findByRole(roles));
-//        userService.update(user, roleService.findByRole(roles));
-//        return "redirect:/admin";
-//    }
+    @GetMapping("/edit")
+    public String edit(@RequestParam("id") long id, Model model) {
+        User user = userService.getUser(id);
+        if (user != null) {
+            model.addAttribute("user", user);
+            model.addAttribute("allRoles", roleService.findAll());
+            return "update_user";
+        } else {
+            return "redirect:/admin/users";
+        }
 
+    }
+
+
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute("user") @Valid User user,
+                       BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("editUserError", true);
+            return "users";
+        }
+        userService.update(user, user.getRoles());
+        return "redirect:/admin";
+    }
     @PostMapping("/delete/{id}")
     public String delete(@ModelAttribute("users") User user) {
         userService.delete(user.getId());

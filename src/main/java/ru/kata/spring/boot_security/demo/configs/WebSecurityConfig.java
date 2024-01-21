@@ -18,6 +18,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void setUserService(UserService userService){
+
         this.userService = userService;
     }
 
@@ -34,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 //Доступ только для админов
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 //Доступ разрешен всем пользователям
                 .antMatchers("/", "/index", "/new").permitAll()
                 //Ысе остальные страницы требуют аутентификации
@@ -42,8 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //Настройка входа в систему
                 .formLogin()
-                .loginPage("/login").loginProcessingUrl("/process_login")
-                .usernameParameter("email")
+                .usernameParameter("email") // указываем, что поле email будет использоваться в качестве юзернейма
                 .passwordParameter("password")
                 .successHandler(successUserHandler)
                 .permitAll()
@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(12);
+        return new BCryptPasswordEncoder();
     }
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception{

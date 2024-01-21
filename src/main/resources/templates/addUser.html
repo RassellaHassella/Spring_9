@@ -7,36 +7,36 @@
     <h1>Добавление пользователя</h1>
 </head>
 <body>
-<form th:action="@{/admin/add}" method="post">
+<form th:action="@{/admin/addUser}" method="post">
     <p><label for="firstName">firstName</label></p>
     <p><input type="text" id="firstName" name="firstName" th:field="*{user.firstName}" required>></p>
-<!--    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{user.firstName}">firstName error</div>-->
+    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{user.firstName}">firstName error</div>
     <br/>
 
     <p><label for="password">password</label></p>
     <p> <input type="password" id="password" name="password" th:field="*{user.password}" required></p>
-<!--    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{user.password}">Password error</div>-->
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{user.password}">Password error</div>
     <br/>
 
     <p><label for="lastName">lastname</label></p>
     <p><input type="text" id="lastName" name="lastName" th:field="*{user.lastName}" required></p>
-<!--    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{user.lastName}">lastName error</div>-->
+    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{user.lastName}">lastName error</div>
     <br/>
 
     <p><label for="age">age</label></p>
     <p><input type="number" id="age" name="age" th:field="*{user.age}" required></p>
-<!--    <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{user.age}">age error</div>-->
+    <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{user.age}">age error</div>
     <br/>
 
     <p><label for="email">email</label></p>
     <p><input type="text" id="email" name="email" th:field="*{user.email}" required></p>
-<!--    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{user.email}">Email error</div>-->
+    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{user.email}">Email error</div>
     <br/>
 
   <label>Role:
       <select size="2" multiple name="allRoles">
-          <option selected="selected" value="1">USER</option>
-          <option value="2">ADMIN</option>
+          <option selected="selected" value="USER">USER</option>
+          <option value="ADMIN">ADMIN</option>
       </select>
   </label>
     <br/>

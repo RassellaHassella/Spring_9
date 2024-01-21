@@ -14,15 +14,15 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class    User implements UserDetails{
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
+    @Column(name = "firstName")
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 2, max = 30, message = "Name should be between 2 and 30 charscters")
     private String firstName;
-    @Column(name = "lastname")
+    @Column(name = "lastName")
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 2, max = 30, message = "Name should be between 2 and 30 charscters")
     private String lastName;
@@ -39,28 +39,22 @@ public class    User implements UserDetails{
 //    @Size(min = 2, max = 30, message = "Password should be between 2 and 30 charscters")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles;
 
     public User() {}
 
-    public User(String email, String firstName, String lastName, Integer age, String password) {
-        this.email = email;
+       public User(String firstName, String lastName, int age, String email, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
+        this.email = email;
         this.password = password;
-    }
-
-    public User(String email, String firstName, String lastName, Integer age, List<Role> roles) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
         this.roles = roles;
+
     }
 
     public Long getId() {
@@ -107,11 +101,11 @@ public class    User implements UserDetails{
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -131,7 +125,7 @@ public class    User implements UserDetails{
 
     @Override
     public String getUsername() {
-        return firstName;
+        return this.email;
     }
 
     @Override
