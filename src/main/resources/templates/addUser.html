@@ -32,14 +32,12 @@
     <p><input type="text" id="email" name="email" required></p>
 <!--    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{user.email}">Email error</div>-->
     <br/>
-
-  <label>Role:
-      <select size="2" multiple name="allRoles">
-          <option selected="selected" value="USER">USER</option>
-          <option value="ADMIN">ADMIN</option>
-      </select>
-  </label>
+    <label for="roles">Select roles:</label>
+    <select id="roles" name="roles" multiple="multiple">
+        <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.role.substring(5)}"></option>
+    </select>
     <br/>
+
     <p>
         <input type="submit" value="add">
     </p>

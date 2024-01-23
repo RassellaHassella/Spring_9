@@ -6,40 +6,42 @@
     <meta charset="utf-8" />
 </head>
 <body>
-<form th:action="@{/admin/edit(id=${user.id})}" th:object="${user}" method="post">
-    <p><input type="hidden" th:field="*{user.id}" /></p>
+<form th:method="POST" th:action="@{/admin/edit(id=${user.id})}" th:object="${user}">
+    <p><input type="hidden" th:field="*{id}" /></p>
+
 
     <p><label for="firstName">firstName</label></p>
-    <p><input type="text" th:field="*{user.firstName}" id="firstName" value="firstName" required></p>
-    <div style="color: red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{user.firstName}">firstName error</div>
+    <p><input type="text"  th:field="*{firstName}" id="firstName" value="firstName"></p>
+<!--    <div style="color: red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{user.firstName}">firstName error</div>-->
 
 
     <p><label for="password">password</label></p>
-    <p><input type="password" th:field="*{user.password}" id="password" value="password"></p>
-    <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{user.password}">Password error</div>
+    <p><input type="password" th:field="*{password}" id="password" value="password"></p>
+<!--    <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{user.password}">Password error</div>-->
 
 
     <p><label for="lastname">lastName</label></p>
-    <p><input type="text" th:field="*{user.lastName}" id="lastName" value="lastName"></p>
-    <div style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{user.lastName}">lastName error</div>
+    <p><input type="text" th:field="*{lastName}" id="lastName" value="lastName"></p>
+<!--    <div style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{user.lastName}">lastName error</div>-->
 
 
     <p><label for="age">age</label></p>
-    <p><input type="number" th:field="*{user.age}" id="age" value="age"></p>
-    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{user.age}">Age error</div>
+    <p><input type="number" th:field="*{age}" id="age" value="age"></p>
+<!--    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{user.age}">Age error</div>-->
 
 
     <p><label for="email">email</label></p>
-    <p><input type="text" th:field="*{user.email}" id="email" value="email"></p>
-    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{user.email}">Email error</div>
+    <p><input type="text" th:field="*{email}" id="email" value="email"></p>
+<!--    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{user.email}">Email error</div>-->
 
 
-    <ul>
-        <li th:each="role : ${allRoles}">
-            <input type="checkbox" name="roles" th:field="*{user.roles}" th:value="${role}"
-                   th:text="${role.getName()}" />
-        </li>
-    </ul>
+    <div>
+        <label for="roles">Select roles:</label>
+        <select id="roles" name="roles" multiple="multiple">
+            <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.role.substring(5)}"
+                    th:selected="${#lists.contains(user.roles, role)}"></option>
+        </select>
+    </div>
     <p>
         <input type="submit" value="edit">
     </p>

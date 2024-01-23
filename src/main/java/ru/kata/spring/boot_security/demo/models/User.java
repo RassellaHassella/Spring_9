@@ -35,7 +35,7 @@ public class User implements UserDetails{
     private String email;
 
     @Column(name = "password")
-    @NotEmpty(message = "Password shouldn't be empty")
+//    @NotEmpty(message = "Password shouldn't be empty")
 //    @Size(min = 2, max = 30, message = "Password should be between 2 and 30 charscters")
     private String password;
 

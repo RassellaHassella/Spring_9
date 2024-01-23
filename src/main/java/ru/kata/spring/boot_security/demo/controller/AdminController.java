@@ -49,32 +49,27 @@ public class AdminController {
         return "addUser";
     }
 
-    @GetMapping("/edit")
-    public String edit(@RequestParam("id") long id, Model model) {
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") long id, Model model) {
         User user = userService.getUser(id);
         if (user != null) {
             model.addAttribute("user", user);
             model.addAttribute("allRoles", roleService.findAll());
             return "adminEditUser";
         } else {
-            return "redirect:/users";
+            return "redirect:/admin";
         }
 
     }
     @PostMapping("/edit")
     public String edit(@ModelAttribute("user") @Valid User user,
                        BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("editUserError", true);
-            return "redirect:/admin";
-        }
         userService.update(user, user.getRoles());
         return "redirect:/admin";
     }
-    @PostMapping("/delete/{id}")
-    public String delete(@ModelAttribute("users") User user) {
-        userService.delete(user.getId());
+    @GetMapping("/delete/{id}")
+    public String deletUser(@PathVariable("id") Long id) {
+        userService.delete(id);
         return "redirect:/admin";
     }
 }

@@ -85,11 +85,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void update(User user, List<Role> roles) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new EntityNotFoundException("Пользователь с email " + user.getEmail() + " уже существует");
-        } else {
+//        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+////            throw new EntityNotFoundException("Пользователь с email " + user.getEmail() + " уже существует");
+//            userRepository.save()
+//        } else {
             userRepository.save(user);
-        }
+//        }
     }
 
     @Override

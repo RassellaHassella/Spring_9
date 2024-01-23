@@ -15,7 +15,6 @@
         <th>id</th>
         <th>email</th>
         <th>firstname</th>
-<!--        <th>password</th>-->
         <th>age</th>
         <th>lastname</th>
         <th>roles</th>
@@ -31,11 +30,7 @@
             <a th:href="@{'/admin/edit/'+${user.id}}">edit</a>
             <a th:href="@{'/admin/delete/'+${user.id}}">delete</a>
         </td>
-<!--        <td>-->
-<!--            <th:block th:each="role : ${user.getRoles()}"-->
-<!--                      th:text="${role.getName().replace('ROLE_', '')}+' '">Roles-->
-<!--            </th:block>-->
-<!--        </td>-->
+
     </tr>
     </tbody>
 </table>
