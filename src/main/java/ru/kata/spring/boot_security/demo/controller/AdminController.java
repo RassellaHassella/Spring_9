@@ -37,7 +37,7 @@ public class AdminController {
 
 
     @PostMapping({"/addUser"})
-    public String createPerson(@ModelAttribute("newUser") @Valid User user){
+    public String createPerson(@ModelAttribute("user") @Valid User user){
         userService.add(user);
         return "redirect:/admin";
     }
@@ -45,7 +45,7 @@ public class AdminController {
     public String newUserForm(Model model) {
         List<Role> roles = (List<Role>) roleService.findAll();
         model.addAttribute("allRoles", roles);
-        model.addAttribute("newUser", new User());
+        model.addAttribute("user", new User());
         return "addUser";
     }
 
