@@ -36,19 +36,16 @@ public class AdminController {
     }
 
 
-    @PostMapping({"/add"})
-    public String createPerson(@ModelAttribute("user") User user){
-//                               @RequestParam(value = "allRoles", required = false) Set<Role> roles) {
-//        user.setRoles(roleService.findByRole(roles));
+    @PostMapping({"/addUser"})
+    public String createPerson(@ModelAttribute("newUser") @Valid User user){
         userService.add(user);
         return "redirect:/admin";
     }
-    @GetMapping("/add")
-    public String newUserForm(@ModelAttribute("user") User user, Model model) {
-        Set<Role> roles = (Set<Role>) roleService.findAll();
+    @GetMapping("/addUser")
+    public String newUserForm(Model model) {
+        List<Role> roles = (List<Role>) roleService.findAll();
         model.addAttribute("allRoles", roles);
-
-
+        model.addAttribute("newUser", new User());
         return "addUser";
     }
 
@@ -58,21 +55,19 @@ public class AdminController {
         if (user != null) {
             model.addAttribute("user", user);
             model.addAttribute("allRoles", roleService.findAll());
-            return "update_user";
+            return "adminEditUser";
         } else {
-            return "redirect:/admin/users";
+            return "redirect:/users";
         }
 
     }
-
-
     @PostMapping("/edit")
     public String edit(@ModelAttribute("user") @Valid User user,
                        BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("editUserError", true);
-            return "users";
+            return "redirect:/admin";
         }
         userService.update(user, user.getRoles());
         return "redirect:/admin";

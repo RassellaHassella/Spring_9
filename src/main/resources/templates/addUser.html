@@ -7,7 +7,7 @@
     <h1>Добавление пользователя</h1>
 </head>
 <body>
-<form th:action="@{/admin/addUser}" method="post">
+<form th:action="@{/admin/addUser}" method="post" th:object="${newUser}">
     <p><label for="firstName">firstName</label></p>
     <p><input type="text" id="firstName" name="firstName" th:field="*{user.firstName}" required>></p>
     <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{user.firstName}">firstName error</div>

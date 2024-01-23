@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -29,10 +30,10 @@ public class InitDB {
     private void PostDb() {
         userService.createRolesIfNotExist();
         User user = new User("Ruslan", "Kutepov", 29, "rkr.ru@mail.ru", "1234",
-                Set.of(roleRepository.getById(1L), roleRepository.getById(2L)));
+                List.of(roleRepository.getById(1L), roleRepository.getById(2L)));
         userService.add(user);
         User user1 = new User("Ivan", "Ivanov", 22, "mail@mail.ru", "1234",
-                Set.of(roleRepository.getById(1L)));
+                List.of(roleRepository.getById(1L)));
         userService.add(user1);
     }
 }

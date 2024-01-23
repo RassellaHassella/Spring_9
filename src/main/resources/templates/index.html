@@ -17,7 +17,6 @@
 </span></h3>
 <div sec:authorize="!isAuthenticated()">
     <h4><a href="/login">Войти</a></h4>
-    <h4><a href="new">Зарегистрироваться</a></h4>
 </div>
 <div sec:authorize="isAuthenticated()">
     <h4><a sec:authorize="hasRole('ROLE_ADMIN')" href="/index">Панель администратора</a></h4>
